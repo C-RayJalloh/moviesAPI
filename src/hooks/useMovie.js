@@ -1,6 +1,6 @@
 import { useEffect, useState} from "react";
 
-export function useMovie(query) {
+export function useMovie(query, callback) {
 
     const [movies, setMovies] = useState([]);
     const [isLoading, setisLoading] = useState(false);
@@ -11,6 +11,9 @@ export function useMovie(query) {
       // DATA FETCHING ON MOUNT USING THE ASYNC FUNCTION
   // MOVIE EFFECT THAT FETCHS MOVIES FROM THE API
   useEffect(() => {
+     
+    callback?.();
+
     // AN ABORT CONTROLLER
     const controller = new AbortController();
 
@@ -55,7 +58,7 @@ export function useMovie(query) {
       return;
     }
 
-   //  HandleBtnClose();
+ 
     FetchMovies();
 
     // return a clean up function
