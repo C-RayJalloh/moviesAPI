@@ -65,7 +65,7 @@ export default function App() {
  
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
-  const { movies, isLoading, error } = useMovie(query, HandleBtnClose);
+  const { movies, isLoading, error } = useMovie(query);
 
   // GET THE LOCAL STORAGE OF WATCHED MOVIES BY USING A CALLBACK FUNCTION IN THE STATE
   const [watched, setWatched] = useState(() => {
