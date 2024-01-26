@@ -6,6 +6,7 @@
 import { useEffect, useRef, useState } from "react";
 import Star from "./Star";
 import { useMovie } from "./hooks/useMovie";
+import { useLocalStorage } from "./hooks/useLocalStorage";
 
 // AN ARRAY OF OBJECT - STATIC DATA
 const tempMovieData = [
@@ -67,12 +68,9 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(null);
   const { movies, isLoading, error } = useMovie(query);
 
-  // GET THE LOCAL STORAGE OF WATCHED MOVIES BY USING A CALLBACK FUNCTION IN THE STATE
-  const [watched, setWatched] = useState(() => {
-    const storage = localStorage.getItem("watched");
-    return JSON.parse(storage) ?? []; // Provide an empty array as the default value
-  });
+  const [ watched, setWatched ] = useLocalStorage([], "watched")
 
+ 
   const Tempquery = "avengers";
 
  
@@ -96,14 +94,7 @@ export default function App() {
     );
   }
 
-  // AN EFFECT WITH LOCAL DATA STORAGE FOR WATCHED MOVIES
-  useEffect(
-    function () {
-      localStorage.setItem("watched", JSON.stringify(watched));
-    },
-    [watched]
-  );
-
+ 
 
 
   return (
