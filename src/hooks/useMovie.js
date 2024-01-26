@@ -1,6 +1,6 @@
 import { useEffect, useState} from "react";
 
-export function useMovie(query, callback) {
+export function useMovie(query) {
 
     const [movies, setMovies] = useState([]);
     const [isLoading, setisLoading] = useState(false);
@@ -12,7 +12,7 @@ export function useMovie(query, callback) {
   // MOVIE EFFECT THAT FETCHS MOVIES FROM THE API
   useEffect(() => {
      
-    callback?.();
+    // callback?.();
 
     // AN ABORT CONTROLLER
     const controller = new AbortController();
