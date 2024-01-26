@@ -8,15 +8,4 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 
-toggle code snippet on buttons
-Steps: 
-CREATE A STATE OF BOOLEAN SET IT TO TRUE OR FALSE
- const [isOpen1, setIsOpen1] = useState(true);
 
-ACCESS/UPDATE THE STATE WITH ONCLICK HANDLER FUNCTION
-TAKE THE CURRENT STATE AND UPDATE IT
- onClick={() => setIsOpen1((open) => !open)}
-
-
-
-Changing the title page with effects
