@@ -6,6 +6,7 @@
 import { useEffect, useRef, useState } from "react";
 import Star from "./Star";
 import { useMovie } from "./hooks/useMovie";
+import { useKey } from "./hooks/useKey";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 
 // AN ARRAY OF OBJECT - STATIC DATA
@@ -151,24 +152,13 @@ function SearchBar({ query, setQuery }) {
   // CREATE A REFERENCE FOR THE INPUT ELEMENT
   const inputEL = useRef(null);
 
-  // ACCESS THE REF WITH AN EFFECT WITH A CALLBACK
-  useEffect( function() {
-    function callback(e) {
-      if (document.activeElement === inputEL.current) return;
+  useKey("Enter", function (){
+    if (document.activeElement === inputEL.current) return;
+    inputEL.current.focus();
+    setQuery("");
+  });
 
-      if (e.code === "Enter") {
-        inputEL.current.focus();
-        setQuery("");
-      }
-    }
 
-    document.addEventListener("keydown", callback);
-
-    // Cleanup function to remove the event listener
-    return () =>
-      document.removeEventListener("keydown", callback);
-    
-  }, [setQuery]); // Include setQuery in the dependency array
 
   return (
     <>
@@ -279,29 +269,9 @@ function MovieDetails({ selectedId, handleBtnClose, handleAdd, watched }) {
     handleAdd(newWatchList);
     handleBtnClose();
   }
-
-  // EFFECT ON KEY PRESS WITH EVENT LISTENER
-  useEffect(
-    function () {
-      // SPECIFY THE EFFECT
-      function callback(e) {
-        if (e.code === "Escape") {
-          handleBtnClose();
-          console.log("CLOSING");
-        }
-      }
-
-      // LISTEN FOR THE EVENT
-      document.addEventListener("keydown", callback);
-
-      // CLEAN UP THE EVENT LISTENER
-      return () => {
-        document.removeEventListener("keydown", callback);
-      };
-    },
-    [handleBtnClose]
-  );
-
+  
+  useKey("Escape", handleBtnClose);
+ 
   // FETCHING THE MOVIE DETAILS FROM THE API WITH A useEFFECT
   useEffect(() => {
     async function getmovieDetails() {
