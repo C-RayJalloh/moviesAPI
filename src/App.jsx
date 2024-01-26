@@ -1,9 +1,11 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from "react";
 import Star from "./Star";
+import { useMovie } from "./hooks/useMovie";
 
 // AN ARRAY OF OBJECT - STATIC DATA
 const tempMovieData = [
@@ -57,14 +59,13 @@ const tempWatchedData = [
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
-const Key = "50fa8b10";
+
 
 export default function App() {
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setisLoading] = useState(false);
-  const [error, setError] = useState("");
+ 
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
+  const { movies, isLoading, error } = useMovie(query);
 
   // GET THE LOCAL STORAGE OF WATCHED MOVIES BY USING A CALLBACK FUNCTION IN THE STATE
   const [watched, setWatched] = useState(() => {
@@ -74,24 +75,8 @@ export default function App() {
 
   const Tempquery = "avengers";
 
-  /*
-  useEffect(function () {
-    console.log("After initial render");
-  }, []);
+ 
 
-  useEffect(function () {
-    console.log("After every render");
-  });
-
-  useEffect(
-    function () {
-      console.log("D");
-    },
-    [query]
-  );
-
-  console.log("During render");
-*/
 
   function HandleSelect(id) {
     setSelectedId((currid) => (id === currid ? null : id));
@@ -119,61 +104,7 @@ export default function App() {
     [watched]
   );
 
-  // DATA FETCHING ON MOUNT USING THE ASYNC FUNCTION
-  // MOVIE EFFECT THAT FETCHS MOVIES FROM THE API
-  useEffect(() => {
-    // AN ABORT CONTROLLER
-    const controller = new AbortController();
 
-    async function FetchMovies() {
-      try {
-        setisLoading(true);
-        setError("");
-
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${Key}&s=${query}`,
-          // connect the controller with the fetch
-          { signal: controller.signal }
-        );
-
-        // Handle API errors
-        // if the response is not okay throw an error mssge
-        if (!res.ok) {
-          throw new Error("Something went wrong with fetching movies");
-        }
-
-        const data = await res.json();
-        // if the data response is equal to false throw an error message
-        if (data.Response === "False") {
-          throw new Error("Movie not found");
-        }
-
-        setMovies(data.Search);
-        console.log(data);
-      } catch (err) {
-        if (err.name !== "AbortError") {
-          console.error(err.message);
-          setError(err.message);
-        }
-      } finally {
-        setisLoading(false);
-      }
-    }
-
-    if (!query.length > 3) {
-      setMovies([]);
-      setError("");
-      return;
-    }
-
-    HandleBtnClose();
-    FetchMovies();
-
-    // return a clean up function
-    return function () {
-      controller.abort();
-    };
-  }, [query]); // Include 'query' in the dependency array to re-run the effect when 'query' changes
 
   return (
     <>
@@ -321,6 +252,8 @@ function MovieDetails({ selectedId, handleBtnClose, handleAdd, watched }) {
   const [details, setDetails] = useState({});
   const [isLoading, setisLoading] = useState(true);
   const [userRating, setUserRating] = useState("");
+
+  const Key = "50fa8b10";
 
   const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
   const watchedUserRating = watched.find(
